@@ -27,5 +27,6 @@ def test_database_connection():
     except exc.SQLAlchemyError as e:
         print(f"데이터베이스 연결에 실패했습니다. 오류: {e}")
 
+
 if __name__ == "__main__":
     test_database_connection()
