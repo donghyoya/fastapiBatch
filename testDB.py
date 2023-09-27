@@ -12,7 +12,8 @@ dbname = os.getenv("DATABASE_DB")
 port = os.getenv("DATABASE_PORT")  
 host = os.getenv("DATABASE_SERVER") 
 
-DATABASE_URL = f"mysql+mysqldb://{username}:{password}{host}:{port}/{dbname}?charset=utf8mb4"
+DATABASE_URL = f"mysql+mysqldb://{username}:{password}@{host}:{port}/{dbname}?charset=utf8mb4"
+
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

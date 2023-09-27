@@ -10,9 +10,6 @@ class DynamicTable:
     @declared_attr
     def __tablename__(cls):
         return f'tb_sensordata_{cls.table_date}'
-
-    id = Column(Integer, primary_key=True)
-    data = Column(String)
     # ... 다른 컬럼들 ...
 
     cSenID = Column(String(20), primary_key=True, index=True)
@@ -37,7 +34,8 @@ class DynamicTable:
     datelog = Column(DateTime)
     riskChkLevel_1 = Column(String(10))
     riskChkLevel_2 = Column(String(10))
-    cDriverId = Column(String(100))
+    # cDriverId = Column(String(100))
+
 
     def __init__(self, table_date):
         self.table_date = table_date
