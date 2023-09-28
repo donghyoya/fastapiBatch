@@ -60,7 +60,7 @@ def get_all_data_raw_sql(db: Session, table_date: str):
 
     start_row_change_time2 = time()
     with ThreadPoolExecutor(max_workers=12) as executor:
-      data_list2 = list(executor.map((__change_SensorData_List, result)))
+      data_list2 = list(executor.map(__change_SensorData_List, result))
     # data_list = __change_SensorData_List(result=result)
     end_raw_change_time2 = time()
 
