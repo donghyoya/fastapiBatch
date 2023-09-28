@@ -15,11 +15,15 @@ def get_db():
     finally:
         db.close()
 
-@router.get("/getData",response_model=List[schema.SensorData])
+@router.get("/getData",response_model=int) #List[schema.SensorData]
 def get_tb_sensorData(table_date: str = Query(
-    default="20220211", 
-    example="20220211"
+    default="20220409", 
+    example="20220409"
 ),db:Session = Depends(get_db)):
-    sensor_db = crud.get_test_all_data(table_date=table_date,db=db)
-    print(f'length data 20220211 = {len(sensor_db)}')
-    return sensor_db
+    # sensor_db = crud.get_test_all_data(table_date=table_date,db=db)
+    count = crud.get_data_count(table_date=table_date,db=db)
+    sensor_db_old = crud.get_all_data_raw_sql(table_date=table_date, db=db)
+    # print(f'length data 20220211 = {len(sensor_db)}')
+    print(f'length old sql {table_date} = {len(sensor_db_old)}')
+    print(f'data count {table_date} = {count}')
+    return count

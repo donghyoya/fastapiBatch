@@ -55,7 +55,7 @@ class SensorData(BaseModel):
             # cDriverId=orm_obj.cDriverId if hasattr(orm_obj, 'cDriverId') else None
         )
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class TableDate(BaseModel):
     table_date: str
