@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
-from . import model, schema
+from . import model, schema, tb_model
 from sqlalchemy.sql import text
+from typing import List
 
 def get_data(db: Session, table_date: str, data_id: int):
     table = type("DynamicTable", (model.DynamicTable,), {"table_date": table_date})
@@ -9,7 +10,25 @@ def get_data(db: Session, table_date: str, data_id: int):
 def get_all_data(db: Session, table_date: str):
     table = model.set_dynamic_table(table_date)
     data = db.query(table).all()
-    print(f'crud data = {data}')
+    query = db.query(table)
+    querydata = query.offset(0).limit(20).all()
+    # querydata2 = query.page(2,per_page=20).all()
+    print(f'str query = {str(query)}')
+    print(f'str query all = {str(querydata)}')
+    print(f'str query all = {len(querydata)}')
+    # print(f'str query all2 = {str(querydata2)}')
+    # print(f'str query all2 = {len(querydata2)}')
+    print(f'crud data length = {len(data)}')
+    print(f'crud data type = {type(data)}')
+    response_data = [schema.SensorData.from_orm(item) for item in data]
+    single_result = data[0]
+    convert_data = schema.SensorData.from_orm(single_result)
+    print(f'converted_data = {convert_data}')
+    return response_data
+
+def get_test_all_data(db: Session, table_date: str) -> List[schema.SensorData]:
+    data = db.query(tb_model.SensorDataTable).all()
+    print("=================================================")
     response_data = [schema.SensorData.from_orm(item) for item in data]
     return response_data
 

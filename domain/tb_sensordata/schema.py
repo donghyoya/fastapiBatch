@@ -1,30 +1,30 @@
 # schema.py
-
 from pydantic import BaseModel
+from typing import Optional
 
 class SensorData(BaseModel):
-    cSenID: str
-    cSenDate: str
-    cSenTime: str
-    cSenType: str
-    cSenAccX: str
-    cSenAccY: str
-    cSenAccZ: str
-    cSenGyrX: str
-    cSenGyrY: str
-    cSenGyrZ: str
-    cSenAngX: str
-    cSenAngY: str
-    cSenAngZ: str
-    cSenTemp: str
-    gpsLatitude: str
-    gpsLongitude: str
-    gpsAltitude: str
-    gpsSpeed: str
-    movingDistance: int
-    datelog: str
-    riskChkLevel_1: str
-    riskChkLevel_2: str
+    cSenID: Optional[str]
+    cSenDate: Optional[str]
+    cSenTime: Optional[str]
+    cSenType: Optional[str]
+    cSenAccX: Optional[str]
+    cSenAccY: Optional[str]
+    cSenAccZ: Optional[str]
+    cSenGyrX: Optional[str]
+    cSenGyrY: Optional[str]
+    cSenGyrZ: Optional[str]
+    cSenAngX: Optional[str]
+    cSenAngY: Optional[str]
+    cSenAngZ: Optional[str]
+    cSenTemp: Optional[str]
+    gpsLatitude: Optional[str]
+    gpsLongitude: Optional[str]
+    gpsAltitude: Optional[str]
+    gpsSpeed: Optional[str]
+    movingDistance: Optional[int]
+    datelog: Optional[str]
+    riskChkLevel_1: Optional[str]
+    riskChkLevel_2: Optional[str]
     # cDriverId: str
 
     @staticmethod
