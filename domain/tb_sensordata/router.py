@@ -23,7 +23,6 @@ def get_tb_sensorData(table_date: str = Query(
     # sensor_db = crud.get_test_all_data(table_date=table_date,db=db)
     count = crud.get_data_count(table_date=table_date,db=db)
     sensor_db_old = crud.get_all_data_raw_sql(table_date=table_date, db=db)
-    # print(f'length data 20220211 = {len(sensor_db)}')
-    print(f'length old sql {table_date} = {len(sensor_db_old)}')
-    print(f'data count {table_date} = {count}')
+    # sensor_db = crud.get_test_all_data(table_date=table_date,db=db)
+    print(f'length data {table_date} = {len(sensor_db_old)}')
     return count

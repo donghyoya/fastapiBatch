@@ -29,11 +29,13 @@ def get_all_data(db: Session, table_date: str):
     print(f'converted_data = {convert_data}')
     return response_data
 
-def get_test_all_data(db: Session, table_date: str) -> List[schema.SensorData]:
-    data = db.query(tb_model.SensorDataTable).all()
+def get_test_all_data(db: Session, table_date: str):
+    table = model.set_dynamic_table(table_date=table_date)
+    results = db.query(table).all()
     print("=================================================")
-    response_data = [schema.SensorData.from_orm(item) for item in data]
-    return response_data
+    data_list = [row for row in results]
+    # response_data = [schema.SensorData.from_orm(item) for item in data]
+    return data_list
 
 def get_data_count(db: Session, table_date: str) -> int:
     table = model.set_dynamic_table(table_date)
@@ -49,27 +51,18 @@ def get_all_data_raw_sql(db: Session, table_date: str):
     # DB 연결과 multiprocessing 은 사용이 안됀다
     # with Pool(processes=16) as pool:
     #     result = pool.map(db.execute,sql)
-    result = db.execute(sql).fetchall()
-    end_execute_time = time()
+    execute_time_start = time()
+    results = db.execute(sql).fetchall()
+    execute_time_end = time()
 
-    start_row_change_time = time()
-    with Pool(processes=12) as pool:
-      data_list = pool.map(__change_SensorData_List, result)
-    # data_list = __change_SensorData_List(result=result)
-    end_raw_change_time = time()
+    toList_start = time()
+    data_list = [row for row in results]
+    toList_end = time()
 
-    start_row_change_time2 = time()
-    with ThreadPoolExecutor(max_workers=12) as executor:
-      data_list2 = list(executor.map(__change_SensorData_List, result))
-    # data_list = __change_SensorData_List(result=result)
-    end_raw_change_time2 = time()
-
-    print(f'execute spend time : {end_execute_time - start_execute_time}')
-    print(f'raw change spend time: {end_raw_change_time-start_row_change_time}')
-    print(f'raw change2 spend time: {end_raw_change_time2-start_row_change_time2}')
-    print(f'data_list1 = {len(data_list)}, data_list2 = {len(data_list2)}')
-    #return result.fetchall()
-    return data_list2
+    print(f'sql execute time: {execute_time_end - execute_time_start}')
+    print(f'toList time: {toList_end - toList_start}')
+    print(f'data list 1 length: {len(data_list)}')
+    return data_list
 
 
 def __change_SensorData_List(row):
@@ -100,3 +93,25 @@ def __change_SensorData_List(row):
         # cDriverId=row.cDriverId (필요하다면 이 부분도 추가)
     )
     return data
+
+'''
+    end_execute_time = time()
+
+    start_row_change_time = time()
+    with Pool(processes=12) as pool:
+      data_list = pool.map(__change_SensorData_List, result)
+    # data_list = __change_SensorData_List(result=result)
+    end_raw_change_time = time()
+
+    start_row_change_time2 = time()
+    with ThreadPoolExecutor(max_workers=12) as executor:
+      data_list2 = list(executor.map(__change_SensorData_List, result))
+    # data_list = __change_SensorData_List(result=result)
+    end_raw_change_time2 = time()
+
+    print(f'sqlalchemy execute spend time : {end_execute_time - start_execute_time}')
+    print(f'raw change spend time: {end_raw_change_time-start_row_change_time}')
+    print(f'raw change2 spend time: {end_raw_change_time2-start_row_change_time2}')
+    print(f'data_list1 = {len(data_list)}, data_list2 = {len(data_list2)}')
+    #return result.fetchall()
+'''

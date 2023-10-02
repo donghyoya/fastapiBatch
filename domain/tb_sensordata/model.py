@@ -10,7 +10,6 @@ class DynamicTable:
     @declared_attr
     def __tablename__(cls):
         return f'tb_sensordata_{cls.table_date}'
-    # ... 다른 컬럼들 ...
 
     cSenID = Column(String(20), primary_key=True, index=True)
     cSenDate = Column(String(20))
