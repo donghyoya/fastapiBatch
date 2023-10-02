@@ -24,21 +24,21 @@ config = {
 connection = mysql.connector.connect(**config)
 
 
-
 # 쿼리 실행
 sql_time_start = time()
 cursor = connection.cursor()
 cursor.execute("SELECT * FROM tb_sensordata_20220409")
-results = cursor.fetchall()
 sql_time_end = time()
 
 # 결과 가져오기
 toList_start = time()
+results = cursor.fetchall()
 data_list = [row for row in results]
 toList_end = time()
 
-print(f'msyql connector sql excute time = {sql_time_end - sql_time_start}')
+print(f'sqlalchemy sql excute time = {sql_time_end - sql_time_start}')
 print(f'toList time = {toList_end - toList_start}')
+print(f'data length = {len(data_list)}')
 
 # 리소스 정리
 cursor.close()

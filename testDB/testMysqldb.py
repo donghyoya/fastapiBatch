@@ -24,8 +24,8 @@ data_list = [row for row in results]
 toList_end = time()
 
 
-print(f'MySQLdb sql excute time = {sql_time_end - sql_time_start}')
+print(f'sqlalchemy sql excute time = {sql_time_end - sql_time_start}')
 print(f'toList time = {toList_end - toList_start}')
-print(len(data_list))
+print(f'data length = {len(data_list)}')
 cursor.close()
 conn.close()

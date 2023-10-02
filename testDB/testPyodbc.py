@@ -20,20 +20,20 @@ conn = pyodbc.connect(connection_string)
 conn = pyodbc.connect(connection_string)
 cursor = conn.cursor()
 
-sql_execute_start = time()
+sql_time_start = time()
 # 쿼리 실행
 cursor.execute("SELECT * FROM tb_sensordata_20220409")
 results = cursor.fetchall()
-sql_execute_end = time()
+sql_time_end = time()
 
 
-toList_time_start = time()
+toList_start = time()
 # 결과를 리스트로 가져오기
 data_list = [row for row in results]
-toList_time_end =time()
+toList_end =time()
 
-print(f'pyodbc sql excute time = {sql_execute_end - sql_execute_start}')
-print(f'toList time = {toList_time_end - toList_time_start}')
+print(f'sqlalchemy sql excute time = {sql_time_end - sql_time_start}')
+print(f'toList time = {toList_end - toList_start}')
 print(f'data length = {len(data_list)}')
 
 cursor.close()
