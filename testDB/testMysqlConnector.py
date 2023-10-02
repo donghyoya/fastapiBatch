@@ -32,8 +32,11 @@ sql_time_end = time()
 
 # 결과 가져오기
 toList_start = time()
+# 해당 라이브러리는 lazy로 하기에 쿼리를 바로쏘지만 
+# fetch 하지 않는이상 가져오지않는다
 results = cursor.fetchall()
 data_list = [row for row in results]
+
 toList_end = time()
 
 print(f'sqlalchemy sql excute time = {sql_time_end - sql_time_start}')
