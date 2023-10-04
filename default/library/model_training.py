@@ -2,6 +2,15 @@ import xgboost as xgb
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 
+'''
+split_data: 주어진 데이터를 훈련 세트와 테스트 세트로 분할한다.
+train_model: 주어진 데이터로 XGBoost 모델을 훈련한다.
+predict: 훈련된 모델을 사용하여 테스트 데이터에 대한 예측을 수행한다.
+evaluate_accuracy: 예측 결과의 정확도를 평가한다.
+save_model: 훈련된 모델을 파일로 저장한다.
+load_model: 저장된 모델 파일을 로드한다.
+'''
+
 class ModelTraining:
     def __init__(self, data, features, label):
         self.data = data
