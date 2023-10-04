@@ -14,6 +14,7 @@ def get_all_data_raw_sql(db: CMySQLConnection, table_date: str):
     cursor = db.cursor()
     cursor.execute(sql)
     results = cursor.fetchall()
+    cursor.close()
     execute_time_end = time()
 
     toList_start = time()
