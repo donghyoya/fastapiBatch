@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from . import crud, schema
 from sqlalchemy.orm import  Session
-from default.config import database
+from default.config import sqlalchemy
+from default.config import mysqlconnector
 from typing import List
 
 router = APIRouter(
@@ -9,11 +10,13 @@ router = APIRouter(
 )
 
 def get_db():
+    db = None
     try:
-        db=database.SessionLocal()
+        db = mysqlconnector.get_database()
         yield db
     finally:
-        db.close()
+        if db:
+            db.close()
 
 @router.get("/getData",response_model=int) #List[schema.SensorData]
 def get_tb_sensorData(table_date: str = Query(
@@ -23,6 +26,5 @@ def get_tb_sensorData(table_date: str = Query(
     # sensor_db = crud.get_test_all_data(table_date=table_date,db=db)
     count = crud.get_data_count(table_date=table_date,db=db)
     sensor_db_old = crud.get_all_data_raw_sql(table_date=table_date, db=db)
-    # sensor_db = crud.get_test_all_data(table_date=table_date,db=db)
     print(f'length data {table_date} = {len(sensor_db_old)}')
     return count

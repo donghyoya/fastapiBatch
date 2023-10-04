@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from mysql.connector.connection_cext import CMySQLConnection
 from . import model, schema, tb_model
 from sqlalchemy.sql import text
 from typing import List
@@ -6,53 +6,14 @@ from time import time
 from multiprocessing import Pool
 from concurrent.futures import ThreadPoolExecutor
 
-def get_data(db: Session, table_date: str, data_id: int):
-    table = type("DynamicTable", (model.DynamicTable,), {"table_date": table_date})
-    return db.query(table).filter(table.id == data_id).first()
-
-def get_all_data(db: Session, table_date: str):
-    table = model.set_dynamic_table(table_date)
-    data = db.query(table).all()
-    query = db.query(table)
-    querydata = query.offset(0).limit(20).all()
-    # querydata2 = query.page(2,per_page=20).all()
-    print(f'str query = {str(query)}')
-    print(f'str query all = {str(querydata)}')
-    print(f'str query all = {len(querydata)}')
-    # print(f'str query all2 = {str(querydata2)}')
-    # print(f'str query all2 = {len(querydata2)}')
-    print(f'crud data length = {len(data)}')
-    print(f'crud data type = {type(data)}')
-    response_data = [schema.SensorData.from_orm(item) for item in data]
-    single_result = data[0]
-    convert_data = schema.SensorData.from_orm(single_result)
-    print(f'converted_data = {convert_data}')
-    return response_data
-
-def get_test_all_data(db: Session, table_date: str):
-    table = model.set_dynamic_table(table_date=table_date)
-    results = db.query(table).all()
-    print("=================================================")
-    data_list = [row for row in results]
-    # response_data = [schema.SensorData.from_orm(item) for item in data]
-    return data_list
-
-def get_data_count(db: Session, table_date: str) -> int:
-    table = model.set_dynamic_table(table_date)
-    count = db.query(table).count()
-    print("=================================================")
-    return count
-
-
-def get_all_data_raw_sql(db: Session, table_date: str):
+def get_all_data_raw_sql(db: CMySQLConnection, table_date: str):
     table_name = f"tb_sensordata_{table_date}"
-    sql = text(f"SELECT * FROM {table_name}")
-    start_execute_time = time()
-    # DB 연결과 multiprocessing 은 사용이 안됀다
-    # with Pool(processes=16) as pool:
-    #     result = pool.map(db.execute,sql)
+    sql = f"SELECT * FROM {table_name}"
+
     execute_time_start = time()
-    results = db.execute(sql).fetchall()
+    cursor = db.cursor()
+    cursor.execute(sql)
+    results = cursor.fetchall()
     execute_time_end = time()
 
     toList_start = time()
@@ -63,6 +24,48 @@ def get_all_data_raw_sql(db: Session, table_date: str):
     print(f'toList time: {toList_end - toList_start}')
     print(f'data list 1 length: {len(data_list)}')
     return data_list
+
+def get_data_count(db: CMySQLConnection, table_date: str) -> int:
+    table_name = f"tb_sensordata_{table_date}"
+    sql = f"SELECT COUNT(*) FROM {table_name}"
+    cursor = db.cursor()
+    cursor.execute(sql)
+    count = cursor.fetchone()[0]
+    print("=================================================")
+    return count
+
+# def get_data(db: Session, table_date: str, data_id: int):
+#     table = type("DynamicTable", (model.DynamicTable,), {"table_date": table_date})
+#     return db.query(table).filter(table.id == data_id).first()
+
+# def get_all_data(db: Session, table_date: str):
+#     table = model.set_dynamic_table(table_date)
+#     data = db.query(table).all()
+#     query = db.query(table)
+#     querydata = query.offset(0).limit(20).all()
+#     # querydata2 = query.page(2,per_page=20).all()
+#     print(f'str query = {str(query)}')
+#     print(f'str query all = {str(querydata)}')
+#     print(f'str query all = {len(querydata)}')
+#     # print(f'str query all2 = {str(querydata2)}')
+#     # print(f'str query all2 = {len(querydata2)}')
+#     print(f'crud data length = {len(data)}')
+#     print(f'crud data type = {type(data)}')
+#     response_data = [schema.SensorData.from_orm(item) for item in data]
+#     single_result = data[0]
+#     convert_data = schema.SensorData.from_orm(single_result)
+#     print(f'converted_data = {convert_data}')
+#     return response_data
+
+# def get_test_all_data(db: Session, table_date: str):
+#     table = model.set_dynamic_table(table_date=table_date)
+#     results = db.query(table).all()
+#     print("=================================================")
+#     data_list = [row for row in results]
+#     # response_data = [schema.SensorData.from_orm(item) for item in data]
+#     return data_list
+
+
 
 
 def __change_SensorData_List(row):
