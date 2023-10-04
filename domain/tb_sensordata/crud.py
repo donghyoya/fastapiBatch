@@ -21,6 +21,11 @@ def get_all_data_raw_sql(db: CMySQLConnection, table_date: str):
     data_list = [row for row in results]
     toList_end = time()
 
+    index = 0
+    for data in data_list:
+        print(f'{index} data = {data}')
+    
+    print(f'data type = {type(data_list[0])}')
     print(f'sql execute time: {execute_time_end - execute_time_start}')
     print(f'toList time: {toList_end - toList_start}')
     print(f'data list 1 length: {len(data_list)}')

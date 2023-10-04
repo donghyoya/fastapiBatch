@@ -200,18 +200,13 @@ all_label_counts
 all_safety_scores
 
 
-# # 운전거리 계산
-
-# In[131]:
-
+# 운전거리 계산
 
 def remove_zero_coordinates(df):
     return df[(df['gpsLatitude'] != 0) & (df['gpsLongitude'] != 0)]
 
 # 각 데이터프레임에 대해 제거 함수를 적용하고 결과를 새로운 리스트에 저장합니다.
 dfs = [remove_zero_coordinates(df) for df in dfs]
-
-
 
 
 # Haversine 공식 함수
@@ -278,9 +273,6 @@ def calculate_total_distances(dfs, threshold=300):
 # 함수 호출하여 주행 거리 리스트 반환
 total_distances = calculate_total_distances(dfs)
 
-# 각 데이터프레임의 주행 거리 출력
-for i, distance in enumerate(total_distances):
-    print(f"DataFrame {i+1} 총 주행 거리: {distance} 킬로미터")
 
 
 # 0 = 안전,
@@ -321,15 +313,10 @@ print(ad)
 # print(yesterday_date)
 
 
-# # 지금용
-
-# In[135]:
+# 지금용
 
 
 cs = datetime.strptime('20220409', "%Y%m%d").date()
-
-
-# In[136]:
 
 
 # 모든 요소를 int로 변환
@@ -337,9 +324,6 @@ ad_int = [[int(val) for val in sublist] for sublist in ad]
 
 # 결과 확인
 print(ad_int)
-
-
-# In[137]:
 
 
 # 모든 요소를 float로 변환
@@ -366,10 +350,6 @@ print(total_distances_float)
 cSenID_int_list = [int(item) for item in cSenID_list]
 
 print(cSenID_int_list)
-
-
-# In[140]:
-
 
 a = []
 for i in range(len(cSenID_int_list)):
@@ -425,16 +405,3 @@ except Exception as e:
 finally:
     cursor.close()  # 커서를 닫습니다.
     db.close()  # 데이터베이스 연결을 닫습니다.
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
