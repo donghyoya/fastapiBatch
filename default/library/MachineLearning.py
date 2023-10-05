@@ -1,22 +1,9 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
-
-
-get_ipython().system('pip install pymysql')
-
-
-# In[37]:
-
-
 import numpy as np 
 import pandas as pd 
 from IPython.core.interactiveshell import InteractiveShell
 import warnings
 from sklearn.model_selection import train_test_split
 import xgboost as xgb
-import pymysql
 from sklearn.metrics import accuracy_score
 import math
 from datetime import datetime
@@ -24,11 +11,7 @@ from datetime import date, timedelta
 
 
 # 결과 확인을 용이하게 하기 위한 코드
-
 InteractiveShell.ast_node_interactivity = 'all'
-
-
-pd.options.display.max_columns = 39
 
 # 모든 경고 비활성화
 warnings.filterwarnings("ignore")
@@ -88,7 +71,6 @@ y_pred = model.predict(x_test)
 
 # 정확도 계산
 accuracy = accuracy_score(y_test, y_pred)
-print('정확도:', accuracy)
 
 
 # # DB연동하여 데이터 불러오기
@@ -139,8 +121,11 @@ for y in formatted_yesterday:
             'riskChkLevel_1',
             'riskChkLevel_2']
         df_t = pd.DataFrame(result1,columns=new_column_names)
-        df_t = df_t[['cSenTime','gpsLatitude','gpsLongitude','cSenAccX', 'cSenAccY', 'cSenAccZ', 'cSenGyrX', 'cSenGyrY', 'cSenGyrZ', 'cSenAngX', 'cSenAngY', 'cSenAngZ','gpsSpeed']]
-        df_t[['gpsLatitude','gpsLongitude','cSenAccX', 'cSenAccY', 'cSenAccZ', 'cSenGyrX', 'cSenGyrY', 'cSenGyrZ', 'cSenAngX', 'cSenAngY', 'cSenAngZ','gpsSpeed']] = df_t[['gpsLatitude','gpsLongitude','cSenAccX', 'cSenAccY', 'cSenAccZ', 'cSenGyrX', 'cSenGyrY', 'cSenGyrZ', 'cSenAngX', 'cSenAngY', 'cSenAngZ','gpsSpeed']].astype(float)
+        df_t = df_t[['cSenTime','gpsLatitude','gpsLongitude','cSenAccX', 'cSenAccY', 'cSenAccZ', 'cSenGyrX', 'cSenGyrY', 'cSenGyrZ', \
+                     'cSenAngX', 'cSenAngY', 'cSenAngZ','gpsSpeed']]
+        df_t[['gpsLatitude','gpsLongitude','cSenAccX', 'cSenAccY', 'cSenAccZ', 'cSenGyrX', 'cSenGyrY', \
+              'cSenGyrZ', 'cSenAngX', 'cSenAngY', 'cSenAngZ','gpsSpeed']] = df_t[['gpsLatitude','gpsLongitude','cSenAccX', 'cSenAccY', \
+                'cSenAccZ', 'cSenGyrX', 'cSenGyrY', 'cSenGyrZ', 'cSenAngX', 'cSenAngY', 'cSenAngZ','gpsSpeed']].astype(float)
         dfs.append(df_t)
 
 for i in dfs:
@@ -378,30 +363,20 @@ for i in range(len(cSenID_int_list)):
 # In[141]:
 
 
-import pymysql
-
-# MySQL 데이터베이스 연결 설정
-db = pymysql.connect(
-    host="cg.navers.co.kr",
-    user="gosafe",
-    password="gogosafe0@",
-    database="goSafe"
-)
-
 # 커서 생성
-cursor = db.cursor()
+# cursor = db.cursor()
 
-# 데이터베이스에 데이터 적재
-try:
-    for data in a:
-        sql = "INSERT INTO result_safe_score (SenID, Date,safe_driv_cnt,rapid_acc_cnt ,rapid_decel_cnt ,rapid_stop_cnt ,rapid_rot_cnt ,safe_score ,driv_dist  ) VALUES (%s, %s, %s,%s,%s,%s,%s,%s,%s)"
-        cursor.execute(sql, data)
+# # 데이터베이스에 데이터 적재
+# try:
+#     for data in a:
+#         sql = "INSERT INTO result_safe_score (SenID, Date,safe_driv_cnt,rapid_acc_cnt ,rapid_decel_cnt ,rapid_stop_cnt ,rapid_rot_cnt ,safe_score ,driv_dist  ) VALUES (%s, %s, %s,%s,%s,%s,%s,%s,%s)"
+#         cursor.execute(sql, data)
 
-    db.commit()  # 변경 내용을 데이터베이스에 반영
-    print("데이터가 성공적으로 적재되었습니다.")
-except Exception as e:
-    db.rollback()  # 변경 내용 롤백
-    print(f"데이터 적재 중 오류 발생: {str(e)}")
-finally:
-    cursor.close()  # 커서를 닫습니다.
-    db.close()  # 데이터베이스 연결을 닫습니다.
+#     db.commit()  # 변경 내용을 데이터베이스에 반영
+#     print("데이터가 성공적으로 적재되었습니다.")
+# except Exception as e:
+#     db.rollback()  # 변경 내용 롤백
+#     print(f"데이터 적재 중 오류 발생: {str(e)}")
+# finally:
+#     cursor.close()  # 커서를 닫습니다.
+#     db.close()  # 데이터베이스 연결을 닫습니다.
